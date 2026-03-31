@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./src/backend
+    ports:
+      - "3000:3000" # Mapea puerto local:puerto contenedor
+    volumes:
+      - ./src/backend:/app
+      - /app/node_modules # Evita que se sobreescriban los modulos del contenedor
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build: ./src/frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src/frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend # El front espera a que el back esté listo
