@@ -11,6 +11,8 @@ import cartRouter from "./routers/cart.js";
 import chatsRouter from "./routers/chats.js";
 import categoryRouter from "./routers/categorys.js";
 import messagesConnection from "./socket.io/handlers/messages.js";
+import { User } from "./database/models.js";
+import { where } from "sequelize";
 
 //Creamos el proceso de express y el puerto para el servidor.
 const app = express();
@@ -21,7 +23,19 @@ app.use(express.json());
 app.use(cors({
   origin:'*' //CAMBIAR CUNADO EMPIEZE EL FRONTEND
 }));
-app.use("/user", usersRouter)
+app.use("/user", async (req, res, next) => {
+    //Seeds
+    await User.findOrCreate({
+      where: { name: 'testUser'},
+      defaults: {
+      name: "testUser",
+      email: "test@gmail.com",
+      password: "1234",
+      roll: "admin",
+      dni: "12345678",
+      home: "San Lorenzo 204, Ciudad de Mendoza"
+    }}); next();
+  }, usersRouter)
 app.use("/products", productsRouter)
 app.use("/cart", cartRouter)
 app.use("/chats", chatsRouter)

@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # 6. Exponemos el puerto (ej: 3000 para bakcend, 5173 para front)
-EXPOSE 1573
+EXPOSE 5173
 
 # 7. Comando para arrancar
 CMD ["npm", "run", "dev"]
