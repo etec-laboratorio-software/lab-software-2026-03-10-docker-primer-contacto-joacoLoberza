@@ -1,4 +1,4 @@
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -89,5 +89,61 @@ export function Loggin ({ nextRoute, lastRoute }) {
 }
 
 export function Register () {
-    return <p>Register</p>
+    const [load, setLoad] = useState(false);
+    const [error, setError] = useState('');
+
+    const navigate = useNavigate()
+
+    const handleSubmit = async (e) => {
+        setLoad(true);
+        setError('');
+        e.preventDefault();
+
+        const data = new FormData(e.target);
+
+        try {
+            const res = await fetch('/api/user/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: data.get('name'),
+                    email: data.get('email'),
+                    password: data.get('password'),
+                    roll: data.get('role'),
+                    dni: data.get('dni'),
+                    home: data.get('home')
+                })
+            });
+            const json = await res.json();
+            console.log(json);
+
+            if (!res.ok) {
+                setError('Algo no salió bien en el registro.');
+            }
+        } catch(error) {
+            setError('Algo no salio bien... error');
+        } finally {
+            setLoad(false);
+            navigate('/')
+        }
+    }
+    return (
+        <>
+        <h1>Formulario de registro:</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col">
+            <input name="name" type="text" placeholder="Nombre"></input>
+            <input name="email" type="text" placeholder="e-mail"></input>
+            <input name="password" type="text" placeholder="contraseña"></input>
+            <p>Role:</p>
+            <label>Admin<input name="role" type="radio" value="admin"></input></label>
+            <label>cliente<input name="role" type="radio" value="client"></input></label>
+            <input name="dni" type="text" placeholder="dni"></input>
+            <input name="home" type="text" placeholder="domicilio"></input>
+            <button type="submit" disabled={load}>{load? "Eviando..." : "Enviar"}</button>
+            <p>{error}</p>
+        </form>
+        </>
+    )
 }

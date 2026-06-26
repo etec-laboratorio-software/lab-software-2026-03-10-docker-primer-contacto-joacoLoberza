@@ -60,6 +60,7 @@ export const userRegister = async (req, res) => {
   */
   try {
     const newUser = await User.create(req.body)
+    console.log('HOLA')
     const newCart = await Cart.create({
       user: newUser.id
     })

@@ -24,7 +24,7 @@ export function Home () {
     }
     return (
         <div>
-            <p>Haga una petición a mi hermoso backend</p>
+            <p>Haga una petición al backend para ver la lista de usuarios</p>
             <button 
                 onClick={req} 
                 disabled={loading}
